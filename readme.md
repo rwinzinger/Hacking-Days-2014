@@ -12,4 +12,4 @@ Wie immer gilt natürlich dass
 Cheers,
 Ralph
 
-Kein Mitarbeiter von Senacor aber neugierig? No Senacor employee but curious? [Contact me!](mailto:ralph.winzinger@senacor.com?subject=Hacking%20Days%202014)
+__Kein Mitarbeiter von Senacor aber neugierig? No Senacor employee but curious? [Contact me!](mailto:ralph.winzinger@senacor.com?subject=Hacking%20Days%202014)__
