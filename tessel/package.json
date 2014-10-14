@@ -1,0 +1,12 @@
+{
+  "name": "tessel-hd14",
+  "version": "0.0.1",
+  "description": "tessel-stuff for hd14",
+  "dependencies": {
+    "climate-si7020": "x",
+    "ambient-attx4": "x",
+    "mqtt": "0.3.x"
+  },
+  "author": "Ralph",
+  "license": "BSD"
+}
