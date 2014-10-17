@@ -7,6 +7,11 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>Dropwizard Hello World application</name>
 
+    <properties>
+        <paho.version>1.0.0</paho.version>
+    </properties>
+
+
     <repositories>
         <repository>
             <id>sonatype-nexus-snapshots</id>
@@ -20,6 +25,11 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.fusesource.mqtt-client</groupId>
+            <artifactId>mqtt-client</artifactId>
+            <version>1.7</version>
+        </dependency>
         <dependency>
             <groupId>com.yammer.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>

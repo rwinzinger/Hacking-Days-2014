@@ -1,30 +1,35 @@
 package com.github.sullis.dropwizard.helloworld.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import com.github.sullis.dropwizard.helloworld.api.HelloMessage;
 import com.google.common.base.Optional;
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/helloworld")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class HelloWorldResource {
+
+    String username = "default";
 
     public HelloWorldResource() {
     }
 
     @GET
-    @Timed(name = "get-requests")
-    public HelloMessage get(@QueryParam("name") Optional<String> name) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public HelloMessage get() {
         HelloMessage hello = new HelloMessage();
-        hello.setMessage("Hello" + ( (name.isPresent()) ? " " + name.get() : ""));
+        hello.setMessage("Hello " + username);
         return hello;
+    }
+
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    public String add(String name) {
+        username = name;
+        return username;
     }
 }
 
