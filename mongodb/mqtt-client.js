@@ -17,8 +17,10 @@ var mqttServerIp = args.mqttserver || '192.168.2.11'
 var mqttServerPort = args.mqttport || '1883';
 var mqttServerUser = args.mqttauth ? args.mqttauth[0] : null;
 var mqttServerPassword = args.mqttauth ? args.mqttauth[1] : null;
+var collection = topic.split("_")[1];
 
 console.log("using topic: " + topic);
+console.log("using collection: " +  collection);
 console.log("using mongodb: " + dbUrl);
 console.log("using mqtt: " + mqttServerIp + ":" + mqttServerPort);
 
@@ -31,7 +33,7 @@ var MongoClient = mongodb.MongoClient;
 
 MongoClient.connect(dbUrl, function(err, db) {
   if(err) throw err;
-  db.createCollection(topic, function(err, collection){});
+  db.createCollection(collection, function(err, collection){});
 });
 
 mqttClient.on('connect', function() { // When connected
@@ -40,11 +42,12 @@ mqttClient.on('connect', function() { // When connected
       	console.log("Received '" + message + "' on '" + topic + "'");
 		MongoClient.connect(dbUrl, function(err, db) {
 	  	  	if(err) throw err;
-			var now = new Date();
-			var doc = {timestamp: now, payload: message};
-	  		db.collection(topic, function(err, collection) {
+			var payload = JSON.parse(message);
+			var doc = {timestamp: new Date(), type: collection, value: payload.value, unit: payload.unit};
+			console.log("JSON doc: " +  JSON.stringify(doc));
+	  		db.collection(collection, function(err, collection) {
 				collection.insert(doc, {w: 1}, function(err, records){
-				  console.log("Record added with id: "+records[0]._id);
+				  console.log("Document added with id: "+records[0]._id);
 				  db.close();
 				});
 	  		});
