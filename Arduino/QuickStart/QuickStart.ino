@@ -4,7 +4,14 @@
 #include <Ethernet.h>
 
 // initialize the library with the numbers of the interface pins
+
+
+// Mein China LCD hat die Belegung 8, 9, 4, 5, 6, 7
+// Um kompatibel mit der Netbridge zu bleiben habe ich die
+// Verkabelung auf 8, 9, 3, 5, 6, 7 umgebogen.
+
 LiquidCrystal lcd(8, 9, 3, 5, 6, 7);
+
 
 
 void setup() {
