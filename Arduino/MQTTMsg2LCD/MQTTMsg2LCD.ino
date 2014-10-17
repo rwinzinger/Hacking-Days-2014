@@ -1,9 +1,10 @@
 #include <LiquidCrystal.h>
 
-
 #include <SPI.h>
 #include <Ethernet.h>
 #include <PubSubClient.h>
+
+// For PubSubClient, download Arduino Client for MQTT library from https://github.com/knolleary/pubsubclient/tags
 
 // the media access control (ethernet hardware) address for the shield:
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };  
