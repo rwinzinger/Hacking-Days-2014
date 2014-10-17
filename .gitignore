@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.class
 .classpath
 .project
@@ -9,3 +10,8 @@ target
 *.jar
 *.war
 *.ear
+=======
+node_modules
+*.log
+db
+>>>>>>> origin/master

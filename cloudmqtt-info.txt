@@ -1,0 +1,5 @@
+URL	mqtt://evnevuat:G4yO7QTrmogs@m20.cloudmqtt.com:19709
+Hostname	m20.cloudmqtt.com
+Username	evnevuat
+Password	G4yO7QTrmogs
+Port	19709
