@@ -1,3 +1,17 @@
+<<<<<<< HEAD
+*.class
+.classpath
+.project
+.settings
+logs
+target
+
+# Package Files #
+*.jar
+*.war
+*.ear
+=======
 node_modules
 *.log
 db
+>>>>>>> origin/master
