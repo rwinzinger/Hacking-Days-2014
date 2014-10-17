@@ -7,19 +7,26 @@ var args = stdio.getopt({
     'topic': {key: 't', args: 1, description: 'topic name', mandatory: true},
 	'mongourl': {key: 'm', args: 1, description: 'mongodb url'},
 	'mqttserver': {key: 's', args: 1, description: 'mqtt server ip'},
-	'mqttport': {key: 'p', args: 1, description: 'mqtt server port'}
+	'mqttport': {key: 'p', args: 1, description: 'mqtt server port'},
+	'mqttauth': {key: 'u', args: 2, description: 'mqtt authentication parameters'}
 });
 
 var topic = args.topic;
 var dbUrl = args.mongourl || 'mongodb://127.0.0.1:27017/hacking'
 var mqttServerIp = args.mqttserver || '192.168.2.11'
 var mqttServerPort = args.mqttport || '1883';
+var mqttServerUser = args.mqttauth ? args.mqttauth[0] : null;
+var mqttServerPassword = args.mqttauth ? args.mqttauth[1] : null;
 
 console.log("using topic: " + topic);
 console.log("using mongodb: " + dbUrl);
 console.log("using mqtt: " + mqttServerIp + ":" + mqttServerPort);
 
-var mqttClient = mqtt.createClient(mqttServerPort, mqttServerIp);
+var mqttClient = mqtt.createClient(mqttServerPort, mqttServerIp, {
+    username: mqttServerUser,
+    password: mqttServerPassword 
+});
+
 var MongoClient = mongodb.MongoClient;
 
 MongoClient.connect(dbUrl, function(err, db) {
