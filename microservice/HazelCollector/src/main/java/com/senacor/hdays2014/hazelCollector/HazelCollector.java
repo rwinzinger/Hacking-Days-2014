@@ -6,10 +6,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
 import com.hazelcast.config.Config;
+import com.hazelcast.config.InterfacesConfig;
 import com.hazelcast.config.TcpIpConfig;
+import com.hazelcast.core.EntryEvent;
+import com.hazelcast.core.EntryListener;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.senacor.hdays2014.hazelCollector.helper.ClusterAddress;
@@ -26,6 +30,7 @@ import javax.xml.transform.stream.StreamSource;
 public class HazelCollector {
 
   private Log log = LogFactory.getLog(HazelCollector.class);
+  private AtomicInteger counter = new AtomicInteger(0);
 
   @Autowired
   ClusterAddress clusterAddress;
@@ -38,7 +43,8 @@ public class HazelCollector {
     Config cfg = new Config();
 
     TcpIpConfig config = cfg.getNetworkConfig().getJoin().getTcpIpConfig();
-
+    cfg.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
+    cfg.getNetworkConfig().getInterfaces().addInterface("192.168.2.103:5701");
     config.setEnabled(true);
 
     for (String s: clusterAddress.getAddresses()) {
@@ -46,6 +52,27 @@ public class HazelCollector {
     }
 
     instance = Hazelcast.newHazelcastInstance(cfg);
+    instance.getMap("t_temp").addEntryListener(new EntryListener<Object, Object>() {
+        @Override
+        public void entryAdded(EntryEvent<Object, Object> objectObjectEntryEvent) {
+            System.out.println( "Entry Added:" + objectObjectEntryEvent.getKey() +" "+objectObjectEntryEvent.getValue() );
+        }
+
+        @Override
+        public void entryRemoved(EntryEvent<Object, Object> objectObjectEntryEvent) {
+            System.out.println( "Entry removed:" + objectObjectEntryEvent.getKey() +" "+objectObjectEntryEvent.getValue() );
+        }
+
+        @Override
+        public void entryUpdated(EntryEvent<Object, Object> objectObjectEntryEvent) {
+            System.out.println( "Entry updated:" + objectObjectEntryEvent.getKey()+" "+objectObjectEntryEvent.getValue() );
+        }
+
+        @Override
+        public void entryEvicted(EntryEvent<Object, Object> objectObjectEntryEvent) {
+            System.out.println( "Entry evicted:" + objectObjectEntryEvent.getKey() +" "+objectObjectEntryEvent.getValue() );
+        }
+    }, true);
   }
 
   public Event parseEvent(String data) {
@@ -66,9 +93,10 @@ public class HazelCollector {
 
     Event event = parseEvent(data);
 
-    instance.getList(topic).add(event);
 
-    log.info("Added " + data + " to " + topic);
+    instance.getMap(topic).put(counter.incrementAndGet(),data);
+
+    log.info("Added " + data + " to " + topic+ " key: "+counter.get());
   }
 
   public boolean getLock(String topic) {
