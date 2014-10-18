@@ -8,6 +8,9 @@
 
 using namespace ArduinoJson::Parser;
 
+// JSON Parser can be retrieved at: https://github.com/not404/json-arduino
+// PubSubClient can be retrieved at: https://github.com/knolleary/pubsubclient/tags
+
 LiquidCrystal lcd(8, 9, 3, 5, 6, 7);
 
 // Update these with values suitable for your network.
@@ -48,13 +51,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
   lcd.print(unit);
   lcd.print(") LIGHT");
   
-  int amount = value * 160;
+  int amount = value * 150;
   int maxi = min(amount,16);
   
   lcd.setCursor(0,1);
   
   for (int i = 0; i < maxi; i++) {
-    delay(100);
+    delay(50);
     lcd.write(byte(0));
   }
  }
