@@ -1,21 +1,23 @@
-<<<<<<< HEAD
 *.class
+
 .classpath
 .project
 .settings
 .idea
+*.iml
+
 bin
 logs
+*.log
+
+build
 target
-.gitignore
-target
+
+node_modules
+platforms
+db
 
 # Package Files #
 *.jar
 *.war
 *.ear
-=======
-node_modules
-*.log
-db
->>>>>>> origin/master
