@@ -41,9 +41,8 @@ public class HazelListener{
 
 
     public void init() {
-        Config cfg = new Config();
-
-        TcpIpConfig config = cfg.getNetworkConfig().getJoin().getTcpIpConfig();
+        final Config cfg = new Config();
+        final TcpIpConfig config = cfg.getNetworkConfig().getJoin().getTcpIpConfig();
         cfg.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
         cfg.getNetworkConfig().getInterfaces().addInterface("192.168.2.103:5701");
         config.setEnabled(true);
@@ -58,46 +57,6 @@ public class HazelListener{
         instance.getMap("t_hum").addEntryListener(new MyEntryListener("t_hum"), true);
         instance.getMap("t_sound").addEntryListener(new MyEntryListener("t_sound"), true);
         instance.getMap("lastKey").addEntryListener(new MyEntryListener(null), true);
-    }
-
-    public Event parseEvent(String data) {
-        final JSONObject json = new JSONObject(data);
-
-        Event event = new Event();
-        event.setValue(String.valueOf(json.get("value")));
-        event.setUnit(json.getString("unit"));
-        event.setTimestamp(new Date());
-
-        return event;
-    }
-
-    public void addEvent(String topic, String data) {
-        if (instance == null) {
-            init();
-        }
-
-        Event event = parseEvent(data);
-
-
-        instance.getMap(topic).put(counter.incrementAndGet(),data);
-    }
-
-    public boolean getLock(String topic) {
-        if (instance == null) {
-            init();
-        }
-
-        Lock lock = instance.getLock(topic);
-        try {
-            if (lock.tryLock (5000, TimeUnit.MILLISECONDS)) {
-                lockMap.put(topic, lock);
-                return true;
-            }
-        } catch (InterruptedException e) {
-            log.error("Could not get lock " + topic);
-        }
-
-        return false;
     }
 
     class MyEntryListener implements EntryListener<Object, Object>{

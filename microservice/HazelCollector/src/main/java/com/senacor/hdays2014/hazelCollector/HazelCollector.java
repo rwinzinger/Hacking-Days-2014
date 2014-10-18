@@ -31,6 +31,7 @@ public class HazelCollector {
 
   private Log log = LogFactory.getLog(HazelCollector.class);
   private AtomicInteger counter = new AtomicInteger(0);
+  private int lastMapEntry = 0;
 
   @Autowired
   ClusterAddress clusterAddress;
@@ -52,27 +53,7 @@ public class HazelCollector {
     }
 
     instance = Hazelcast.newHazelcastInstance(cfg);
-    instance.getMap("t_temp").addEntryListener(new EntryListener<Object, Object>() {
-        @Override
-        public void entryAdded(EntryEvent<Object, Object> objectObjectEntryEvent) {
-            System.out.println( "Entry Added:" + objectObjectEntryEvent.getKey() +" "+objectObjectEntryEvent.getValue() );
-        }
 
-        @Override
-        public void entryRemoved(EntryEvent<Object, Object> objectObjectEntryEvent) {
-            System.out.println( "Entry removed:" + objectObjectEntryEvent.getKey() +" "+objectObjectEntryEvent.getValue() );
-        }
-
-        @Override
-        public void entryUpdated(EntryEvent<Object, Object> objectObjectEntryEvent) {
-            System.out.println( "Entry updated:" + objectObjectEntryEvent.getKey()+" "+objectObjectEntryEvent.getValue() );
-        }
-
-        @Override
-        public void entryEvicted(EntryEvent<Object, Object> objectObjectEntryEvent) {
-            System.out.println( "Entry evicted:" + objectObjectEntryEvent.getKey() +" "+objectObjectEntryEvent.getValue() );
-        }
-    }, true);
   }
 
   public Event parseEvent(String data) {
@@ -96,7 +77,6 @@ public class HazelCollector {
 
     instance.getMap(topic).put(counter.incrementAndGet(),data);
 
-    log.info("Added " + data + " to " + topic+ " key: "+counter.get());
   }
 
   public boolean getLock(String topic) {
@@ -116,5 +96,7 @@ public class HazelCollector {
 
     return false;
   }
+
+
 
 }
