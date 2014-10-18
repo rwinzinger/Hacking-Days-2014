@@ -7,12 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
 import com.hazelcast.config.Config;
+import com.hazelcast.config.InterfacesConfig;
 import com.hazelcast.config.TcpIpConfig;
+import com.hazelcast.core.EntryEvent;
+import com.hazelcast.core.EntryListener;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
 import com.senacor.hdays2014.hazelCollector.helper.ClusterAddress;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.commons.logging.Log;
@@ -27,6 +32,7 @@ import javax.xml.transform.stream.StreamSource;
 public class HazelCollector {
 
   private Log log = LogFactory.getLog(HazelCollector.class);
+  private AtomicInteger counter = new AtomicInteger(0);
 
   @Autowired
   ClusterAddress clusterAddress;
@@ -42,17 +48,34 @@ public class HazelCollector {
     cfg.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
 
     config.setEnabled(true);
-    cfg.getNetworkConfig().getInterfaces().addInterface(clusterAddress.getOwnAddress());
-
-    cfg.getNetworkConfig().getInterfaces().setEnabled(true);
 
     for (String s: clusterAddress.getAddresses()) {
       config.addMember(s);
     }
 
 
-
     instance = Hazelcast.newHazelcastInstance(cfg);
+    instance.getMap("t_temp").addEntryListener(new EntryListener<Object, Object>() {
+        @Override
+        public void entryAdded(EntryEvent<Object, Object> objectObjectEntryEvent) {
+            System.out.println( "Entry Added:" + objectObjectEntryEvent.getKey() +" "+objectObjectEntryEvent.getValue() );
+        }
+
+        @Override
+        public void entryRemoved(EntryEvent<Object, Object> objectObjectEntryEvent) {
+            System.out.println( "Entry removed:" + objectObjectEntryEvent.getKey() +" "+objectObjectEntryEvent.getValue() );
+        }
+
+        @Override
+        public void entryUpdated(EntryEvent<Object, Object> objectObjectEntryEvent) {
+            System.out.println( "Entry updated:" + objectObjectEntryEvent.getKey()+" "+objectObjectEntryEvent.getValue() );
+        }
+
+        @Override
+        public void entryEvicted(EntryEvent<Object, Object> objectObjectEntryEvent) {
+            System.out.println( "Entry evicted:" + objectObjectEntryEvent.getKey() +" "+objectObjectEntryEvent.getValue() );
+        }
+    }, true);
   }
 
   public Event parseEvent(String data) {
@@ -73,9 +96,10 @@ public class HazelCollector {
 
     Event event = parseEvent(data);
 
-    instance.getList(topic).add(event);
 
-    log.info("Added " + data + " to " + topic);
+    instance.getMap(topic).put(counter.incrementAndGet(), event);
+
+    log.info("Added " + data + " to " + topic+ " key: "+counter.get());
   }
 
   public boolean getLock(String topic) {
@@ -96,12 +120,12 @@ public class HazelCollector {
     return false;
   }
 
-  public List<Event> getList(String topic) {
+  public IMap<Integer, Event> getMap(String topic) {
     if (instance == null) {
       init();
     }
 
-    return instance.getList(topic);
+    return instance.getMap(topic);
   }
 
 }
