@@ -37,6 +37,11 @@ public class Main {
       return new HazelListener();
   }
 
+    @Bean(initMethod = "init")
+    TwitterService getTwitterService(){
+        return new TwitterService();
+    }
+
   @Bean
   public MQTTConfig getMqttConfig() {
     return new MQTTConfig("m20.cloudmqtt.com", 19709, "evnevuat", "G4yO7QTrmogs");
