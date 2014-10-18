@@ -1,5 +1,7 @@
 package com.senacor.hdays2014.hazelCollector;
 
+import org.json.JSONString;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,7 +12,7 @@ import java.util.Date;
  * Time: 10:01
  * To change this template use File | Settings | File Templates.
  */
-public class Event implements Serializable {
+public class Event implements Serializable, JSONString {
   private String topic;
   private String value;
   private String unit;
@@ -48,4 +50,10 @@ public class Event implements Serializable {
   public void setUnit(String unit) {
     this.unit = unit;
   }
+
+  @Override
+  public String toJSONString() {
+    return "{\"value\":" + value + ",\"unit\":\"" + unit + "\",\"timestamp\":\"" + timestamp.getTime() + "\"\\}";
+  }
+
 }

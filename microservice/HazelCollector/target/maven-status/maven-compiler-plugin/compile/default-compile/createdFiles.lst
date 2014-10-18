@@ -1,5 +1,3 @@
 com/senacor/hdays2014/hazelCollector/Main.class
-com/senacor/hdays2014/hazelCollector/MQTTConfig.class
 com/senacor/hdays2014/hazelCollector/HazelCollector.class
 com/senacor/hdays2014/hazelCollector/MQTTReceiver.class
-com/senacor/hdays2014/hazelCollector/ClusterAddress.class

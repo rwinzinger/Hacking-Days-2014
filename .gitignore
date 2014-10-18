@@ -3,7 +3,11 @@
 .classpath
 .project
 .settings
+.idea
+bin
 logs
+target
+.gitignore
 target
 
 # Package Files #

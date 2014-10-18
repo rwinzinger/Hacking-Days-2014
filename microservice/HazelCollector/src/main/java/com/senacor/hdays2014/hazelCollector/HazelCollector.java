@@ -4,6 +4,7 @@ import java.io.StringBufferInputStream;
 import java.io.StringReader;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,6 +17,7 @@ import com.hazelcast.core.EntryEvent;
 import com.hazelcast.core.EntryListener;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
 import com.senacor.hdays2014.hazelCollector.helper.ClusterAddress;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.commons.logging.Log;
@@ -45,12 +47,13 @@ public class HazelCollector {
 
     TcpIpConfig config = cfg.getNetworkConfig().getJoin().getTcpIpConfig();
     cfg.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
-    cfg.getNetworkConfig().getInterfaces().addInterface("192.168.2.103:5701");
+
     config.setEnabled(true);
 
     for (String s: clusterAddress.getAddresses()) {
       config.addMember(s);
     }
+
 
     instance = Hazelcast.newHazelcastInstance(cfg);
 
@@ -74,10 +77,16 @@ public class HazelCollector {
 
     Event event = parseEvent(data);
 
-
-    instance.getMap(topic).put(counter.incrementAndGet(),data);
-
+    instance.getMap(topic).put(counter.incrementAndGet(), event);
   }
+
+  public int getIndex(String topic) {
+    Map<String, Integer> indexMap = instance.getMap("lastKey");
+
+    int index = indexMap.get(topic);
+    return index;
+  }
+
 
   public boolean getLock(String topic) {
     if (instance == null) {
@@ -97,11 +106,18 @@ public class HazelCollector {
     return false;
   }
 
-
-    public HazelcastInstance getInstance() {
-        if (instance == null) {
-            init();
-        }
-        return instance;
+  public IMap<Integer, Event> getMap(String topic) {
+    if (instance == null) {
+      init();
     }
+
+    return instance.getMap(topic);
+  }
+
+  public HazelcastInstance getInstance() {
+      if (instance == null) {
+          init();
+      }
+      return instance;
+  }
 }
