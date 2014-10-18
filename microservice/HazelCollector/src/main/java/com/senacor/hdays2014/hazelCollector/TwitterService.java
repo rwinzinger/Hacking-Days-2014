@@ -21,6 +21,8 @@ import java.util.Map;
 public class TwitterService {
     private static Log log = LogFactory.getLog(TwitterService.class);
 
+    private LocalDateTime lastTweetTime = LocalDateTime.MIN;
+
     @Autowired
     HazelCollector hazelCollector;
 
@@ -37,7 +39,15 @@ public class TwitterService {
             @Override
             public void entryAdded(EntryEvent<Integer, Event> integerEventEntryEvent) {
                 try {
-                    twitter.updateStatus("Temperature at "+ LocalTime.now()+" #hackingDays2014 is "+integerEventEntryEvent.getValue().getValue() + " "+integerEventEntryEvent.getValue().getUnit());
+                    final LocalDateTime now = LocalDateTime.now();
+                    if(now.minusMinutes(5L).isAfter(lastTweetTime)) {
+                        twitter.updateStatus("Temperature at " + LocalTime.now() + " #hackingDays2014 is " + integerEventEntryEvent.getValue().getValue() + " " + integerEventEntryEvent.getValue().getUnit());
+                        lastTweetTime = now;
+                        log.info("Tweetet temperature "+now);
+                    }
+                    else{
+                        log.info(now+" Did not tweet because last tweet just happened.");
+                    }
                 } catch (TwitterException e) {
                     log.error(e.toString());
                 }
