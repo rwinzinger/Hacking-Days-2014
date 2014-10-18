@@ -23,8 +23,8 @@ var tessel = require("tessel")
 // Initialize value ranges.
 var maxTemp = 50
 ,minTemp = 0
-,minLight = 0.1
-,maxLight = 0.12;
+,minLight = 0.01
+,maxLight = 0.16;
 
 
 /**
