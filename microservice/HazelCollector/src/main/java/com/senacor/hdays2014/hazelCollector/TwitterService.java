@@ -27,6 +27,13 @@ public class TwitterService {
     HazelCollector hazelCollector;
 
     public void init(){
+        if(!hazelCollector.getLock("twitter")){
+            log.info("Did not acquire twitter lock");
+            return;
+        }else
+        {
+            log.info("Acquired twitter lock");
+        }
         final ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setOAuthConsumerKey("JyMNVwiRaI3aqe9uXKNVNYNGK")
                 .setOAuthConsumerSecret("edwxLrEAu5YEAUFIBHHeEPvnaieKuFRncJLEqnYtCzR0ojCLRP")
