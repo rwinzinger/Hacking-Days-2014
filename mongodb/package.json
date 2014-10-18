@@ -1,0 +1,8 @@
+{
+  "name": "mqtt-client",
+  "version": "1.0.0",
+  "description": "mqtt client which stores each message into mongodb using topic name as collection name",
+  "main": "mqtt-client.js",
+  "author": "Senacor Technolocies AG"
+
+}
