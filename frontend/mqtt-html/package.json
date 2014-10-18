@@ -1,0 +1,11 @@
+{
+  "name": "mqtt-websocket-bridge",
+  "version": "0.0.1",
+  "description": "mqtt-websocket-bridge",
+  "dependencies": {
+    "express": "4.x.x",
+    "socket.io": "1.x.x",
+    "mqtt": "x",
+    "apn": "x"
+  }
+}
