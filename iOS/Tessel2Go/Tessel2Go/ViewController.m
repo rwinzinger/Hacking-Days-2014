@@ -8,11 +8,13 @@
 
 #import "ViewController.h"
 #import <MQTTKit.h>
+#import <CoreMotion/CoreMotion.h>
 
 @interface ViewController ()
 
 @property IBOutlet UIButton *connectionLabel;
 @property IBOutlet UILabel *connectionStatus;
+
 @property (weak, nonatomic) IBOutlet UITextField *tempField;
 @property (weak, nonatomic) IBOutlet UITextField *humField;
 @property (weak, nonatomic) IBOutlet UITextField *lightField;
@@ -22,6 +24,8 @@
 
 @property MQTTClient *client;
 @property BOOL connected;
+
+@property CMMotionManager *motionManager;
 
 @end
 
@@ -34,6 +38,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    /* ------ MQTT --------- */
     NSString *clientID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     self.client = [[MQTTClient alloc] initWithClientId:clientID];
     [self.client setUsername:@"evnevuat"];
@@ -58,11 +63,32 @@
             }
         });
     }];
+    
+    /* ---------- MOTIONS -------- */
+    self.motionManager = [[CMMotionManager alloc] init];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    if (self.connected) {
+        [self disconnectFromMqtt];
+    }
+    [self stopMotionUpdate];
+    self.textView.text = @"";
+    
+    [super viewWillDisappear:animated];
+}
+
+- (NSUInteger) supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL) shouldAutorotate {
+    return NO;
 }
 
 #pragma mark -
@@ -93,6 +119,7 @@
             [self resetUI];
             [self toggleConnectionStatus];
             [[self.connectionLabel titleLabel] setText:@"Connect from MQTT"];
+            [self stopMotionUpdate];
         });
     }];
 }
@@ -137,6 +164,46 @@
         [self unSubscribeFromTopic:topic];
     }
 }
+
+- (void) publishToTopic: (NSString *) topic aValue: (NSString *) value {
+    if (self.connected) {
+        [self.client publishString:value
+                           toTopic:topic
+                           withQos:AtMostOnce
+                            retain:NO
+                 completionHandler:^(int mid) {
+                     dispatch_async(dispatch_get_main_queue(), ^{
+                         [self addLog: [NSString stringWithFormat:@"Publishing value <%@> to topic: %@", value, topic]];
+                     });
+                 }];
+    }
+}
+
+#pragma mark -
+#pragma mark MOTION
+
+- (void) startPublishingTilt {
+    if (self.motionManager.isAccelerometerAvailable) {
+        [self addLog:@"starting AccelerometerUpdates!"];
+        [self.motionManager setAccelerometerUpdateInterval:0.5];
+        [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
+            CMAcceleration acceleration = accelerometerData.acceleration;
+            [self publishToTopic:@"t_tilt" aValue: [NSString stringWithFormat:@"%f", acceleration.x]];
+        }];
+    } else {
+        [self addLog:@"Accelerometer not available!"];
+    }
+    
+}
+
+- (void) stopMotionUpdate {
+    if ([self.motionManager isAccelerometerActive]) {
+        [self.motionManager stopAccelerometerUpdates];
+        [self addLog:@"AccelerometerUpdates stopped!"];
+    }
+}
+
+
 
 #pragma mark -
 #pragma mark UI
@@ -189,6 +256,18 @@
     [self.textView insertText: [NSString stringWithFormat:@"%@ \n", log]];
     [self.textView scrollRangeToVisible:[self.textView selectedRange]];
 
+}
+
+- (IBAction)publishTilt {
+    if (self.connected) {
+        [self startPublishingTilt];
+    } else {
+        [self addLog:@"No connection!"];
+    }
+}
+
+- (IBAction)stopPublishingTilt {
+    [self stopMotionUpdate];
 }
 
 @end
