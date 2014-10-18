@@ -14,3 +14,5 @@ client.subscribe('t_sound');
 client.on('message', function (topic, message) {
   console.log("Got a message!", topic, message);
 });
+
+process.on('exit', function() { client.end(); });
