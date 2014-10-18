@@ -1,6 +1,6 @@
   @SenacorHackDays
 
-Consumer Key                    M6jkueAbWMM3LDwPoz7ETPnFF
-Consumer Secret (API Secret)	YNCGvBYwjceGI8uM7tm1IvIUiGGZctsNMy5TJFcTprqrUxblH2
-Access Token	                2834950696-Ed0AVklVXCVH8DgmhVxzvh9C879eA8d1WjPc1ZA
-Access Token Secret	        qRQUu2LPbHqS0LEkcs2SXl46OtWmJ2gQaG1BcG7MnykU1
+Consumer Key                    JyMNVwiRaI3aqe9uXKNVNYNGK
+Consumer Secret (API Secret)	edwxLrEAu5YEAUFIBHHeEPvnaieKuFRncJLEqnYtCzR0ojCLRP
+Access Token	                2836217525-q2T9yMDOwPJZQpv2p7127Q9y0ddRe4LRr6vUvfM
+Access Token Secret	        xrr05KDu0xPrWlsAK3Is9R1KKUv9aQTxOuAOixgshj3J9
