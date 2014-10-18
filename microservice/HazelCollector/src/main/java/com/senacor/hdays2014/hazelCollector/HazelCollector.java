@@ -56,7 +56,8 @@ public class HazelCollector {
 
 
     instance = Hazelcast.newHazelcastInstance(cfg);
-
+    Map<Object,Object> keys = instance.getMap("lastKey");
+    counter.set(Math.max((Integer)keys.get("t_temp"), Math.max((Integer)keys.get("t_light"),Math.max((Integer)keys.get("t_hum"), (Integer)keys.get("t_sound")))));
   }
 
   public Event parseEvent(String data) {
