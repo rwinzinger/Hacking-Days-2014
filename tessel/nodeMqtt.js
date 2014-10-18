@@ -1,51 +1,70 @@
+/**
+ * File to test the functionality of the mqtt-script without actually calling the tessel specific functionality.
+ */
 var mqtt = require('mqtt')
 
 client = mqtt.createClient(19709, 'm20.cloudmqtt.com', {
 	username : "evnevuat",
 	password : "G4yO7QTrmogs",
-	clientId : "18775"
+	clientId : "18785"
 });
 
 client.subscribe('t_temp');
-client.subscribe('t_sound');
+//client.subscribe('t_sound');
+client.subscribe('t_light');
 
-
-var maxTemp = 40;
+var maxTemp = 50;
 var minTemp = 0;
 
-var position = 0;
-var position2 = 0;
+var minLight = 0.1;
+var maxLight = 0.12;
+
+
 
 client.on('message', function(topic, message) {
 	console.log(topic + ": " + message);
-	console.log("t_sound ==="+topic+"? " + String(String(topic)==="t_sound"));
-	// Topic t_sound
-	if (String(topic)==="t_sound") {
+	
+	// Topic t_light
+	if(String(topic)==="t_light"){
+		var jsonMessage = JSON.parse(message);
 		
-		if(position2 == 0){
-			position2 = 1;
+		var positionLight = computePositionInInterval(jsonMessage.value, minLight, maxLight);
+		console.log("Position light: " + positionLight);
+		
+		if(positionLight < 0){
+			positionLight = 0;
 		}
-		else if(position2 == 1){
-			position2 = 0;
+		else if(positionLight >1){
+			positionLight = 1;
 		}
+	}
+	
+	// Topic t_sound
+	if (String(topic) === "t_sound") {
+		
 	}
 	
 	// Topic t_temp
 	if (String(topic) === "t_temp") {
-		var jsonMessage = JSON.parse(message);
-		console.log("jsonMessage: " + jsonMessage);
-		console.log("jsonMessage.value: " + jsonMessage.value);
-		position = Number(jsonMessage.value) / (maxTemp - minTemp);
 
-		if (position > 1) {
-			position = 1;
+		var jsonMessage = JSON.parse(message);
+		var positionTemp = computePositionInInterval(jsonMessage.value,minTemp,maxTemp);
+
+		if (positionTemp > 1) {
+			positionTemp = 1;
 		}
-		if (position < 0) {
-			position = 0;
+		if (positionTemp < 0) {
+			positionTemp = 0;
 		}
-		console.log("Position: " + position);
+		console.log("Position temp: " + positionTemp);
 	}
 });
+
+function computePositionInInterval(absoluteValue, minValue, maxValue){
+	var range = maxValue - minValue;
+	return (Number(absoluteValue)-minValue)/range;
+}
+
 
 client.on('connect', function() {
 	console.log("connect");
@@ -53,6 +72,6 @@ client.on('connect', function() {
 });
 
 process.on("exit", function() {
-	console.log("about to exit ...")
+	console.log("about to exit ...");
 	client.end();
-})
+});
