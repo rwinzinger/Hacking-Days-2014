@@ -32,8 +32,6 @@ public class HazelListener{
     private int lastMapEntry = 0;
 
     @Autowired
-    ClusterAddress clusterAddress;
-    @Autowired
     HazelCollector hazelCollector;
 
     private HazelcastInstance instance;

@@ -77,10 +77,16 @@ public class HazelCollector {
 
     Event event = parseEvent(data);
 
-
     instance.getMap(topic).put(counter.incrementAndGet(), event);
-
   }
+
+  public int getIndex(String topic) {
+    Map<String, Integer> indexMap = instance.getMap("lastKey");
+
+    int index = indexMap.get(topic);
+    return index;
+  }
+
 
   public boolean getLock(String topic) {
     if (instance == null) {
