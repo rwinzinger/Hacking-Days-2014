@@ -4,13 +4,6 @@
 #include <EthernetUdp.h>
 #include <Time.h>
 
-//#define DIFF(a,b) (((a)<(b))?(b)-(a):(a)-(b))
-//#define MAX(a,b) (((a)<(b))?(b):(a))
-//#define MIN(a,b) (((a)<(b))?(a):(b))
-//#define T(a,b) ((a)*60+(b))
-
-/** BLOCK FOR NTP **/
-// Enter a MAC address for your controller below.
 // Newer Ethernet shields have a MAC address printed on a sticker on the shield
 byte mac[] = {  
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
@@ -18,9 +11,6 @@ byte mac[] = {
 unsigned int localPort = 8888;      // local port to listen for UDP packets
 
 IPAddress timeServer(132, 163, 4, 101); // time-a.timefreq.bldrdoc.gov NTP server
-//IPAddress timeServer(132, 163, 4, 101); // time-a.timefreq.bldrdoc.gov NTP server
-// IPAddress timeServer(132, 163, 4, 102); // time-b.timefreq.bldrdoc.gov NTP server
-// IPAddress timeServer(132, 163, 4, 103); // time-c.timefreq.bldrdoc.gov NTP server
 
 const int NTP_PACKET_SIZE= 48; // NTP time stamp is in the first 48 bytes of the message
 
@@ -63,12 +53,8 @@ void setTimeFromNTP() {
 
     unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
     unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);  
-    // combine the four bytes (two words) into a long integer
-    // this is NTP time (seconds since Jan 1 1900):
+
     unsigned long secsSince1900_ntp = highWord << 16 | lowWord;
-//    secsSince1900_corresponding_millis = millis();
-    
-//    secsSince1900_ntp -= (3600L * 24 * 3) + 3600L * 14;
     
     if (istSommerzeit(secsSince1900_ntp - seventyYears + 3600))
       setTime(secsSince1900_ntp - seventyYears + 7200);
@@ -131,31 +117,31 @@ void printTimestampSerial() {
   Serial.print("/");
 
   int t = month();
-  if (t < 0)
+  if (t < 10)
     Serial.print("0");
   Serial.print(t);  
   Serial.print("/");
 
   t = day();
-  if (t < 0)
+  if (t < 10)
     Serial.print("0");
   Serial.print(t);  
   Serial.print("/");
 
   t = hour();
-  if (t < 0)
+  if (t < 10)
     Serial.print("0");
   Serial.print(t);  
   Serial.print(":");
 
   t = minute();
-  if (t < 0)
+  if (t < 10)
     Serial.print("0");
   Serial.print(t);  
   Serial.print(":");
 
   t = second();
-  if (t < 0)
+  if (t < 10)
     Serial.print("0");
   Serial.print(t);  
 }
