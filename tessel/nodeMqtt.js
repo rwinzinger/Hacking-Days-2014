@@ -12,6 +12,7 @@ client = mqtt.createClient(19709, 'm20.cloudmqtt.com', {
 client.subscribe('t_temp');
 //client.subscribe('t_sound');
 client.subscribe('t_light');
+client.subscribe('t_tilt');
 
 var maxTemp = 50;
 var minTemp = 0;

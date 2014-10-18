@@ -5,13 +5,14 @@ var mqtt = require('mqtt');
 client = mqtt.createClient(19709, 'm20.cloudmqtt.com', {
 	username : "evnevuat",
 	password : "G4yO7QTrmogs",
-	clientId : "18787"
+	clientId : "18722"
 });
 
 // Subscribe to channels
 client.subscribe('t_temp');
 client.subscribe('t_sound');
 client.subscribe('t_light');
+client.subscribe('t_tilt');
 
 // Initialize tessel modules
 var tessel = require("tessel")
@@ -24,7 +25,9 @@ var tessel = require("tessel")
 var maxTemp = 50
 ,minTemp = 0
 ,minLight = 0.01
-,maxLight = 0.16;
+,maxLight = 0.16
+,minTilt = -1
+,maxTilt = 1;
 
 
 /**
@@ -33,20 +36,34 @@ var maxTemp = 50
 client.on('message', function(topic, message) {
 	console.log(topic + ": " + message);
 	
-	// Topic t_light
-	if(String(topic)==="t_light"){
+	// Topic t_tilt
+	if(String(topic)==="t_tilt"){
 		led2.toggle();
 		try{
-			var jsonMessage = JSON.parse(message);
-			var positionLight = computePositionInInterval(jsonMessage.value, minLight, maxLight);
-			positionLight = keepPositionInRange(positionLight);
-			console.log("Position light: " + positionLight);
+			var positionTilt = computePositionInInterval(message, minTilt, maxTilt);
+			positionTilt = keepPositionInRange(positionTilt);
+			console.log("Position tilt: " + positionTilt);
 			// revert position because of direction of servo
-			servo.move(16,1-(positionLight));
+			servo.move(16,1-(positionTilt));
 		} catch(err){
-			console.log("Error processing t_light data. " + err);
+			console.log("Error processing t_tilt data. " + err);
 		}
 	}
+	
+	// Topic t_light
+//	if(String(topic)==="t_light"){
+//		led2.toggle();
+//		try{
+//			var jsonMessage = JSON.parse(message);
+//			var positionLight = computePositionInInterval(jsonMessage.value, minLight, maxLight);
+//			positionLight = keepPositionInRange(positionLight);
+//			console.log("Position light: " + positionLight);
+//			// revert position because of direction of servo
+//			servo.move(16,1-(positionLight));
+//		} catch(err){
+//			console.log("Error processing t_light data. " + err);
+//		}
+//	}
 	
 	// Topic t_sound
 	if (String(topic) === "t_sound") {
