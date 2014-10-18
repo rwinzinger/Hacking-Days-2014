@@ -4,6 +4,7 @@ import java.io.StringBufferInputStream;
 import java.io.StringReader;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -38,12 +39,18 @@ public class HazelCollector {
     Config cfg = new Config();
 
     TcpIpConfig config = cfg.getNetworkConfig().getJoin().getTcpIpConfig();
+    cfg.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
 
     config.setEnabled(true);
+    cfg.getNetworkConfig().getInterfaces().addInterface(clusterAddress.getOwnAddress());
+
+    cfg.getNetworkConfig().getInterfaces().setEnabled(true);
 
     for (String s: clusterAddress.getAddresses()) {
       config.addMember(s);
     }
+
+
 
     instance = Hazelcast.newHazelcastInstance(cfg);
   }
@@ -87,6 +94,14 @@ public class HazelCollector {
     }
 
     return false;
+  }
+
+  public List<Event> getList(String topic) {
+    if (instance == null) {
+      init();
+    }
+
+    return instance.getList(topic);
   }
 
 }
