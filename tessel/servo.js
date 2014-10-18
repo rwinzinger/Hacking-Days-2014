@@ -13,10 +13,10 @@ var servolib = require('servo-pca9685');
 
 var servo = servolib.use(tessel.port['A']);
 
-var servo1 = 1; // We have a servo plugged in at position 1
+var servo1 = 16; // We have a servo plugged in at position 1
 
 servo.on('ready', function () {
-  var position = 0;  //  Target position of the servo between 0 (min) and 1 (max).
+  var position = 1;  //  Target position of the servo between 0 (min) and 1 (max).
 
   //  Set the minimum and maximum duty cycle for servo 1.
   //  If the servo doesn't move to its full extent or stalls out
