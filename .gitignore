@@ -1,17 +1,15 @@
-<<<<<<< HEAD
 *.class
 .classpath
 .project
 .settings
 logs
 target
-
+*.iml
 # Package Files #
 *.jar
 *.war
 *.ear
-=======
 node_modules
+platforms
 *.log
 db
->>>>>>> origin/master
