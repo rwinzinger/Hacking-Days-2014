@@ -29,7 +29,12 @@ public class Main {
 
   @Bean
   ClusterAddress getClusterAddress() {
-    return new ClusterAddress(new String[]  {"192.168.30.113", "192.168.30.101"});
+    return new ClusterAddress(new String[]  {"192.168.50.1"});
+  }
+
+  @Bean(initMethod = "init")
+  HazelListener getHazelListener(){
+      return new HazelListener();
   }
 
   @Bean
