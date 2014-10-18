@@ -15,7 +15,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "152"
             endingLineNumber = "152"
-            landmarkName = "-toggleConnection:"
+            landmarkName = "-toggleTemp:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -46,9 +46,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "220"
-            endingLineNumber = "220"
-            landmarkName = "-toggleTemp:"
-            landmarkType = "5">
+            endingLineNumber = "220">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -62,9 +60,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "213"
-            endingLineNumber = "213"
-            landmarkName = "-toggleConnectionStatus"
-            landmarkType = "5">
+            endingLineNumber = "213">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -78,9 +74,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "212"
-            endingLineNumber = "212"
-            landmarkName = "-toggleConnectionStatus"
-            landmarkType = "5">
+            endingLineNumber = "212">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -111,7 +105,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "77"
             endingLineNumber = "77"
-            landmarkName = "-viewWillDisappear:"
+            landmarkName = "-connectToMqtt"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
