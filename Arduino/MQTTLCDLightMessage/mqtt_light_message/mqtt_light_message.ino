@@ -44,8 +44,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
   char* unit = root["unit"];
   
   lcd.print(value,4);
-  lcd.print(" ");
+  lcd.print(" (");
   lcd.print(unit);
+  lcd.print(") LIGHT");
   
   int amount = value * 160;
   int maxi = min(amount,16);
@@ -53,6 +54,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   lcd.setCursor(0,1);
   
   for (int i = 0; i < maxi; i++) {
+    delay(100);
     lcd.write(byte(0));
   }
  }
