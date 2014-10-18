@@ -6,7 +6,7 @@ var mqtt = require('mqtt')
 client = mqtt.createClient(19709, 'm20.cloudmqtt.com', {
 	username : "evnevuat",
 	password : "G4yO7QTrmogs",
-	clientId : "18785"
+	clientId : "18666"
 });
 
 client.subscribe('t_temp');
@@ -16,8 +16,8 @@ client.subscribe('t_light');
 var maxTemp = 50;
 var minTemp = 0;
 
-var minLight = 0.1;
-var maxLight = 0.12;
+var minLight = 0.01;
+var maxLight = 0.13;
 
 
 

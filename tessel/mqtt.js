@@ -1,10 +1,11 @@
+var mqtt = require('mqtt');
 /**
  * Create client for mqtt connection.
  */
 client = mqtt.createClient(19709, 'm20.cloudmqtt.com', {
 	username : "evnevuat",
 	password : "G4yO7QTrmogs",
-	clientId : "18785"
+	clientId : "18787"
 });
 
 // Subscribe to channels
@@ -13,8 +14,7 @@ client.subscribe('t_sound');
 client.subscribe('t_light');
 
 // Initialize tessel modules
-var mqtt = require('mqtt')
-,tessel = require("tessel")
+var tessel = require("tessel")
 ,led1 = tessel.led[0].output(0)
 ,led2 = tessel.led[1].output(0)
 ,servolib = require("servo-pca9685")
@@ -36,11 +36,16 @@ client.on('message', function(topic, message) {
 	// Topic t_light
 	if(String(topic)==="t_light"){
 		led2.toggle();
-		var jsonMessage = JSON.parse(message);
-		var positionLight = computePositionInInterval(jsonMessage.value, minLight, maxLight);
-		positionLight = keepPositionInRange(positionLight);
-		console.log("Position light: " + positionLight);
-		servo.move(16,positionLight);
+		try{
+			var jsonMessage = JSON.parse(message);
+			var positionLight = computePositionInInterval(jsonMessage.value, minLight, maxLight);
+			positionLight = keepPositionInRange(positionLight);
+			console.log("Position light: " + positionLight);
+			// revert position because of direction of servo
+			servo.move(16,1-(positionLight));
+		} catch(err){
+			console.log("Error processing t_light data. " + err);
+		}
 	}
 	
 	// Topic t_sound
@@ -51,11 +56,16 @@ client.on('message', function(topic, message) {
 	// Topic t_temp
 	if (String(topic) === "t_temp") {
 		led1.toggle();
-		var jsonMessage = JSON.parse(message);
-		var positionTemp = computePositionInInterval(jsonMessage.value, minTemp, maxTemp);
-		positionTemp = keepPositionInRange(positionTemp);
-		console.log("Position temp: " + positionTemp);
-		servo.move(1, positionTemp);
+		try{
+			var jsonMessage = JSON.parse(message);
+			var positionTemp = computePositionInInterval(jsonMessage.value, minTemp, maxTemp);
+			positionTemp = keepPositionInRange(positionTemp);
+			console.log("Position temp: " + positionTemp);
+			servo.move(1, positionTemp);
+		}
+		catch(err){
+			console.log("Error processing t_temp data. " + err);
+		}
 	}
 });
 
@@ -70,7 +80,7 @@ client.on('connect', function() {
  * End client if system exits
  */
 process.on("exit", function() {
-	console.log("about to exit ...")
+	console.log("about to exit ...");
 	client.end();
 });
 
@@ -100,11 +110,12 @@ servo.on('ready', function () {
  * @returns The original position or 0/1 if the value is out of bounds.
  */
 function keepPositionInRange(position){
-	if (positionTemp > 1) {
-		positionTemp = 1;
+	// Use 0.98 because there have been problems using 1...
+	if (position > 0.98) {
+		position = 0.98;
 	}
-	if (positionTemp < 0) {
-		positionTemp = 0;
+	if (position < 0) {
+		position = 0;
 	}
 	return position;
 }
