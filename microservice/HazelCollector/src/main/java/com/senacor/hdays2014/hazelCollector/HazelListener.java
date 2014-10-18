@@ -26,41 +26,48 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.transform.stream.StreamSource;
 
-@Component
 public class HazelListener{
 
     private Log log = LogFactory.getLog(HazelListener.class);
-    private AtomicInteger counter = new AtomicInteger(0);
     private int lastMapEntry = 0;
 
     @Autowired
     ClusterAddress clusterAddress;
+    @Autowired
+    HazelCollector hazelCollector;
 
     private HazelcastInstance instance;
     private Map<String, Lock> lockMap = new HashMap<String, Lock>();
 
 
     public void init() {
-        final Config cfg = new Config();
-        final TcpIpConfig config = cfg.getNetworkConfig().getJoin().getTcpIpConfig();
-        cfg.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
-        cfg.getNetworkConfig().getInterfaces().addInterface("192.168.2.103:5701");
-        config.setEnabled(true);
+        instance = hazelCollector.getInstance();
 
-        for (String s: clusterAddress.getAddresses()) {
-            config.addMember(s);
+        if (getLock()) {
+            instance.getMap("t_temp").addEntryListener(new MyEntryListener("t_temp"), true);
+            instance.getMap("t_light").addEntryListener(new MyEntryListener("t_light"), true);
+            instance.getMap("t_hum").addEntryListener(new MyEntryListener("t_hum"), true);
+            instance.getMap("t_sound").addEntryListener(new MyEntryListener("t_sound"), true);
+            instance.getMap("lastKey").addEntryListener(new MyEntryListener(null), true);
+        }
+    }
+
+    private boolean getLock() {
+        final Lock lock = instance.getLock("Listener");
+        try {
+            if (lock.tryLock (5000, TimeUnit.MILLISECONDS)) {
+                lockMap.put("Listener", lock);
+                return true;
+            }
+        } catch (InterruptedException e) {
+            log.error("Could not get lock " + "Listener");
         }
 
-        instance = Hazelcast.newHazelcastInstance(cfg);
-        instance.getMap("t_temp").addEntryListener(new MyEntryListener("t_temp"), true);
-        instance.getMap("t_light").addEntryListener(new MyEntryListener("t_light"), true);
-        instance.getMap("t_hum").addEntryListener(new MyEntryListener("t_hum"), true);
-        instance.getMap("t_sound").addEntryListener(new MyEntryListener("t_sound"), true);
-        instance.getMap("lastKey").addEntryListener(new MyEntryListener(null), true);
+        return false;
     }
 
     class MyEntryListener implements EntryListener<Object, Object>{
-        private Log log = LogFactory.getLog(HazelCollector.class);
+        private Log log = LogFactory.getLog(HazelListener.class);
         final String queue;
 
         MyEntryListener(final String queue){
@@ -91,7 +98,7 @@ public class HazelListener{
             final String keyStr = key.toString();
             log.info( message + key +" "+value );
             if(queue!=null) {
-                instance.getMap("lastKey").put(queue, counter.get());
+                instance.getMap("lastKey").put(queue, key);
             }
         }
     }

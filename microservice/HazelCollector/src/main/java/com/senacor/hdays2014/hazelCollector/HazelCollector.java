@@ -98,5 +98,10 @@ public class HazelCollector {
   }
 
 
-
+    public HazelcastInstance getInstance() {
+        if (instance == null) {
+            init();
+        }
+        return instance;
+    }
 }
