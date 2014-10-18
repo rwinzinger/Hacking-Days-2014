@@ -29,7 +29,7 @@ public class Main {
 
   @Bean
   ClusterAddress getClusterAddress() {
-    return new ClusterAddress(new String[]  {"192.168.50.1"});
+    return new ClusterAddress(new String[]  {"192.168.50.1", "192.168.50.2"});
   }
 
   @Bean(initMethod = "init")
