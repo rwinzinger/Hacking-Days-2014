@@ -57,7 +57,26 @@ public class HazelCollector {
 
     instance = Hazelcast.newHazelcastInstance(cfg);
     Map<Object,Object> keys = instance.getMap("lastKey");
-    counter.set(Math.max((Integer)keys.get("t_temp"), Math.max((Integer)keys.get("t_light"),Math.max((Integer)keys.get("t_hum"), (Integer)keys.get("t_sound")))));
+    if(keys!=null){
+        final int counterValue =  getMaxKey(keys, "t_temp", "t_hum", "t_light", "t_sound");
+        counter.set(counterValue);
+    }
+    }
+
+  private int getMaxKey(Map<Object, Object> keys, String... queues){
+      int result = 0;
+      for(String queue : queues){
+          final int value = getNotNUllValue(keys, queue);
+          if(value>result){
+              result = value;
+          }
+      }
+      return result;
+  }
+
+  private Integer getNotNUllValue(final Map<Object,Object> keys, String queue){
+      Integer value =(Integer) keys.get(queue);
+      return value ==null?0: value;
   }
 
   public Event parseEvent(String data) {
