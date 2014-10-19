@@ -1,0 +1,33 @@
+<!doctype html>
+<html ng-app="project">
+  <head>
+    <script src="bower_components/bower-mqttws/mqttws31.js"></script>
+    <script>
+      var client = new Paho.MQTT.Client("m20.cloudmqtt.com", Number(19709), "20770");
+          client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+    client.connect({onSuccess:onConnect});
+
+    function onConnect() {
+      // Once a connection has been made, make a subscription and send a message.
+      console.log("onConnect");
+      client.subscribe("/World");
+      message = new Paho.MQTT.Message("Hello");
+      message.destinationName = "/World";
+      client.send(message); 
+    };
+    function onConnectionLost(responseObject) {
+      if (responseObject.errorCode !== 0)
+      console.log("onConnectionLost:"+responseObject.errorMessage);
+    };
+    function onMessageArrived(message) {
+      console.log("onMessageArrived:"+message.payloadString);
+      client.disconnect(); 
+    };  
+    </script>
+  </head>
+  <body>
+    <h2>Sensor Data</h2>
+    <div ng-view></div>
+  </body>
+</html>
