@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>FBB0B65B-AF87-4048-B6EA-76D8FD4BA0CD</string>
+	<string>83EAE7AF-1C54-4400-B167-2FF6ED95DC15</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Tessel2Go</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>B3067840-3F28-4153-B71F-4A5BA8E73822</key>
-		<string>https://github.com/senacor/Hacking-Days-2014</string>
+		<key>CD0E2D0AB57F04C1D713782605B2E24949AD64ED</key>
+		<string>https://github.com/senacor/Hacking-Days-2014.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>iOS/Tessel2Go/Tessel2Go.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>B3067840-3F28-4153-B71F-4A5BA8E73822</key>
+		<key>CD0E2D0AB57F04C1D713782605B2E24949AD64ED</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/senacor/Hacking-Days-2014</string>
+	<string>https://github.com/senacor/Hacking-Days-2014.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>B3067840-3F28-4153-B71F-4A5BA8E73822</string>
+	<string>CD0E2D0AB57F04C1D713782605B2E24949AD64ED</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>B3067840-3F28-4153-B71F-4A5BA8E73822</string>
+			<string>CD0E2D0AB57F04C1D713782605B2E24949AD64ED</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Hacking-Days-2014</string>
 		</dict>
