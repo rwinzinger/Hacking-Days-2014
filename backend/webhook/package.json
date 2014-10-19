@@ -1,0 +1,12 @@
+{
+  "name": "git-webhook",
+  "version": "0.0.1",
+  "description": "webhook for hd14",
+  "dependencies": {
+    "restify": "2.8.x",
+    "mqtt": "0.3.x",
+    "mongodb": "1.4.x"
+  },
+  "author": "Ralph",
+  "license": "BSD"
+}
