@@ -1,0 +1,9 @@
+{
+  "name": "node-apn-tester",
+  "version": "0.0.1",
+  "description": "node-apn-tester",
+  "dependencies": {
+  	"restify": "x",
+    "apn": "x"
+  }
+}
