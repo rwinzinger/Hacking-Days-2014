@@ -59,6 +59,23 @@ var mqtt = require('mqtt')
 	    	})
 		}, 3000);
 		
+		// LIGHT TRIGGER
+	    var ltrigger = 0.013;
+	    ambient.setLightTrigger(ltrigger);
+
+	    // Set a light level trigger
+	    // The trigger is a float between 0 and 1
+	    ambient.on('light-trigger', function(data) {
+	      publishToMqtt('t_light', 0, 'Kuehlschrank auf!');
+
+	      // Clear the trigger so it stops firing
+	      ambient.clearLightTrigger();
+	      //After 1.5 seconds reset light trigger
+	      setTimeout(function () {
+	          ambient.setLightTrigger(ltrigger);
+	      }, 1500);
+	    });
+		
 		// KLATSCH KLATSCH
 	    ambient.setSoundTrigger(0.03);
 	    var triggered = false;
