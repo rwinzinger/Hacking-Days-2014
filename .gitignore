@@ -21,3 +21,6 @@ db
 *.jar
 *.war
 *.ear
+
+*.xcbkptlist
+*.xcuserstate

@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import <AudioToolbox/AudioToolbox.h>
 
-
 @interface AppDelegate ()
 
 @end
@@ -213,8 +212,30 @@
     UITextField * alertTextField = [alertView textFieldAtIndex:0];
     NSLog(@"alerttextfiled - %@",alertTextField.text);
     
+    [self buyBeer:alertTextField.text];
+    
     // do whatever you want to do with this UITextField.
 }
+
+- (void)buyBeer:(NSString *)numBeer
+{
+    NSString *post = [NSString stringWithFormat:@"{\"bought\":\"%@\"}", numBeer];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    
+    NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:[NSURL URLWithString:@"http://650b92f8.ngrok.com/boughtBeer"]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    
+    NSURLResponse *response;
+    NSError *error;
+    [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+}
+
 /*
  * ------------------------------------------------------------------------------------------
  *  END APNS CODE

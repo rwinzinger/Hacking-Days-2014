@@ -60,7 +60,6 @@ app.get(baseUrl + endpoint, function(req, res) {
 	//res.json({value:0.123123,unit:'L'});
 	if (lastMessage) {
 		res.json(lastMessage);
-		lastMessage = null;
 	} else {
 		res.status(204).send('No Content');
 	}

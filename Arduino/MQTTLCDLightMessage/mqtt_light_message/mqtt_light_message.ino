@@ -27,7 +27,14 @@ byte full[8] = {
   B11111,
   B11111
 };
-  
+
+boolean flashActive;
+unsigned long flashStart;
+char line1buffer[100];
+char line2buffer[100];
+
+boolean isShowing = false;
+
 EthernetClient ethernetClient;
 PubSubClient client("m20.cloudmqtt.com", 19709, callback, ethernetClient);
 
@@ -41,8 +48,33 @@ void callback(char* topic, byte* payload, unsigned int length) {
   memcpy(msg, payload, length);
   msg[length] = 0;
   
+  Serial.print("msg: ");
+  Serial.println(msg);
+  
   JsonObject root = parser.parse(msg);
   
+  char *type  = root["type"];
+  
+  if (strcmp(type, "alert") == 0) {
+    Serial.println("detected alert request");
+    flashActive = true;
+    flashStart = millis();
+    strcpy(line1buffer, root["line1"]);
+    strcpy(line2buffer, root["line2"]);
+  } else {
+    Serial.println("detected info request");
+    flashActive = false;
+    lcd.setCursor(0,0);
+    lcd.print((char* )root["line1"]);
+    lcd.setCursor(0,1);
+    lcd.print((char *)root["line2"]);
+  }
+
+  
+  
+  
+  
+  /*
   double value = root["value"];
   char* unit = root["unit"];
   
@@ -60,6 +92,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     delay(50);
     lcd.write(byte(0));
   }
+  */
  }
 
 void setup()
@@ -72,15 +105,63 @@ void setup()
   Ethernet.begin(mac);
   Serial.print("IP address: ");
   Serial.println(Ethernet.localIP());
-
-  if (client.connect("client", "evnevuat", "G4yO7QTrmogs")) {
+  
+  lcd.setCursor(0,0);
+  lcd.print("trying to");
+  lcd.setCursor(0,1);
+  lcd.print("connect to MQTT");
+  
+  if (client.connect("rw18775", "evnevuat", "G4yO7QTrmogs")) {
     Serial.println("Connected to mqtt: " +  client.connected());
-    client.subscribe("t_light");
+    client.subscribe("t_lcd");
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Yay! Connected.");
+    lcd.setCursor(0,1);
+    lcd.print("-> t_lcd");
+  } else {
+    Serial.println("No Client ...");
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Sorry, tiger ...");
+    lcd.setCursor(0,1);
+    lcd.print("MQTT is gone!");
   }
+
+}
+
+void showMessage(void) {
+  if (!isShowing) {
+    Serial.println("now showing");
+    lcd.setCursor(0,0);
+    lcd.print(line1buffer);
+    lcd.setCursor(0,1);
+    lcd.print(line2buffer);
+    isShowing = true;
+  }
+}
+
+void clearMessage(void) {
+  if (isShowing) {
+    Serial.println("now clearing");
+    lcd.clear();
+    isShowing = false;
+  }    
 }
 
 void loop()
 {
+  if (flashActive) {
+    if (millis()-flashStart > 10000) {
+      clearMessage();
+    } else {
+      if ((millis()-flashStart)/500 % 2 == 0) {
+        showMessage();
+      } else {
+        clearMessage();
+      }
+    }
+  }
   client.loop();
 }
 

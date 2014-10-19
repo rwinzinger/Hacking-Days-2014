@@ -22,7 +22,13 @@ io.on('connection', function(socket){
 
 client = mqtt.createClient(19709, 'm20.cloudmqtt.com', {username:"evnevuat", password:"G4yO7QTrmogs", clientId:"18773"});
 client.subscribe('t_temp');
+client.subscribe('t_sound');
 client.on('message', function (topic, message) {
-	io.emit('temp', message);
+	console.log(message);
+	if (topic === "t_sound") {
+	  io.emit('sound', message);
+	} else if (topic === "t_temp") {
+	  io.emit('temp', message);
+    }
 });
 

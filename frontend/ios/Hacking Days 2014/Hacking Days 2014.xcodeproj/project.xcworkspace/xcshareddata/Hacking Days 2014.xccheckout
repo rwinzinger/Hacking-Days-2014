@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>1B7BAC52-B99C-448C-86CC-94F5D5EE7AC7</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Hacking Days 2014</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>CD0E2D0AB57F04C1D713782605B2E24949AD64ED</key>
+		<string>https://github.com/senacor/Hacking-Days-2014.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>frontend/ios/Hacking Days 2014/Hacking Days 2014.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>CD0E2D0AB57F04C1D713782605B2E24949AD64ED</key>
+		<string>../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/senacor/Hacking-Days-2014.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>CD0E2D0AB57F04C1D713782605B2E24949AD64ED</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CD0E2D0AB57F04C1D713782605B2E24949AD64ED</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Hacking-Days-2014</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -5,6 +5,7 @@
   "dependencies": {
     "climate-si7020": "x",
     "ambient-attx4": "x",
+    "servo-pca9685": "x",
     "mqtt": "0.3.x"
   },
   "author": "Ralph",
